@@ -1,5 +1,6 @@
 import { useLayoutEffect, useContext } from 'react';
 import { View, StyleSheet } from "react-native";
+import { TextInput } from 'react-native-web';
 import Button from '../components/UI/Button';
 import IconButton from '../components/UI/IconButton';
 import { GlobalStyles } from '../constants/styles';
