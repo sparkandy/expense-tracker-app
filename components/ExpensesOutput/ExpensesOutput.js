@@ -4,11 +4,13 @@ import ExpensesList from './ExpensesList';
 import ExpensesSummary from './ExpensesSummary';
 
 
-function ExpensesOutput ({expenses}){
-    return <View>
-       <ExpensesSummary />
-       <ExpensesList />
-    </View>;
+function ExpensesOutput ({expenses, expensesPeriod}){
+    return (
+      <View>
+        <ExpensesSummary expenses={expenses} periodName={expensesPeriod} />
+        <ExpensesList />
+      </View>
+    );
 }
 
 export default ExpensesOutput;
