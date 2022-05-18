@@ -67,6 +67,12 @@ const DUMMY_EXPENSES = [
     amount: 18.59,
     date: new Date("2022-02-18"),
   },
+  {
+    id: "e12",
+    description: "Context Test",
+    amount: 99.59,
+    date: new Date("2022-06-18"),
+  },
 ];
 
 

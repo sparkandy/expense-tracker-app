@@ -3,17 +3,14 @@ import { View, StyleSheet, Text } from 'react-native';
 import Button from '../UI/Button';
 import Input from './Input';
 
-function ExpenseForm ({onCancel, onSubmit}){
+function ExpenseForm ({submitButtonLabel, onCancel, onSubmit}){
     const [inputValues, setInputValues] = useState({
         amount: '',
         date: '',
         description: ''
     });
 
-    function inputChangedHandler(
-      submitButtonLabel, inputIdentifier,
-      enteredValue
-    ) {
+    function inputChangedHandler(inputIdentifier, enteredValue) {
       setInputValues((curInputValues) => {
         return {
           ...curInputValues,
@@ -22,7 +19,16 @@ function ExpenseForm ({onCancel, onSubmit}){
       });
     }
 
-    function submitHandler(){}
+    function submitHandler(){
+        const expenseData = {
+          amount: +inputValues.amount,
+          date: new Date(inputValues.date),
+          description: inputValues.description,
+        };
+        console.log(expenseData);
+
+        onSubmit(expenseData);
+    }
 
     return (
       <View style={styles.form}>
@@ -43,7 +49,7 @@ function ExpenseForm ({onCancel, onSubmit}){
             textInputConfig={{
               placeholder: "YYYY-MM-DD",
               maxLength: 10,
-              onChangeText: inputChangedHandler.bind(this, "amount"),
+              onChangeText: inputChangedHandler.bind(this, "date"),
               value: inputValues.date,
             }}
           />
