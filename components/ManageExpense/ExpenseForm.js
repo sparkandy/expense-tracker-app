@@ -3,76 +3,75 @@ import { View, StyleSheet, Text } from 'react-native';
 import Button from '../UI/Button';
 import Input from './Input';
 
-function ExpenseForm ({submitButtonLabel, onCancel, onSubmit}){
-    const [inputValues, setInputValues] = useState({
-        amount: '',
-        date: '',
-        description: ''
+function ExpenseForm({ submitButtonLabel, onCancel, onSubmit, defaultValues }) {
+  const [inputValues, setInputValues] = useState({
+    amount: defaultValues ? defaultValues.amount.toString() : "",
+    date: defaultValues ? defaultValues.date.toISOString().slice(0, 10) : "",
+    description: defaultValues ? defaultValues.description.toString() : "",
+  });
+
+  function inputChangedHandler(inputIdentifier, enteredValue) {
+    setInputValues((curInputValues) => {
+      return {
+        ...curInputValues,
+        [inputIdentifier]: enteredValue,
+      };
     });
+  }
 
-    function inputChangedHandler(inputIdentifier, enteredValue) {
-      setInputValues((curInputValues) => {
-        return {
-          ...curInputValues,
-          [inputIdentifier]: enteredValue,
-        };
-      });
-    }
+  function submitHandler() {
+    const expenseData = {
+      amount: +inputValues.amount,
+      date: new Date(inputValues.date),
+      description: inputValues.description,
+    };
+    console.log(expenseData);
 
-    function submitHandler(){
-        const expenseData = {
-          amount: +inputValues.amount,
-          date: new Date(inputValues.date),
-          description: inputValues.description,
-        };
-        console.log(expenseData);
+    onSubmit(expenseData);
+  }
 
-        onSubmit(expenseData);
-    }
-
-    return (
-      <View style={styles.form}>
-        <Text style={styles.title}>Your Expense</Text>
-        <View style={styles.inputRow}>
-          <Input
-            style={styles.rowInput}
-            label="Amount"
-            textInputConfig={{
-              keyboardType: "decimal-pad",
-              onChangeText: inputChangedHandler.bind(this, "amount"),
-              value: inputValues.amount,
-            }}
-          />
-          <Input
-            style={styles.rowInput}
-            label="Date"
-            textInputConfig={{
-              placeholder: "YYYY-MM-DD",
-              maxLength: 10,
-              onChangeText: inputChangedHandler.bind(this, "date"),
-              value: inputValues.date,
-            }}
-          />
-        </View>
+  return (
+    <View style={styles.form}>
+      <Text style={styles.title}>Your Expense</Text>
+      <View style={styles.inputRow}>
         <Input
-          label="Description"
+          style={styles.rowInput}
+          label="Amount"
           textInputConfig={{
-            multiline: true,
-            // autoCorrect: false,
-            // autoCapitalize: 'none',
-            onChangeText: inputChangedHandler.bind(this, "description"),
-            value: inputValues.description,
+            keyboardType: "decimal-pad",
+            onChangeText: inputChangedHandler.bind(this, "amount"),
+            value: inputValues.amount,
           }}
         />
-        <View style={styles.buttons}>
-          <Button style={styles.button} mode="flat" onPress={onCancel}>
-            Cancel
-          </Button>
-          <Button onPress={submitHandler}>{submitButtonLabel}</Button>
-        </View>
+        <Input
+          style={styles.rowInput}
+          label="Date"
+          textInputConfig={{
+            placeholder: "YYYY-MM-DD",
+            maxLength: 10,
+            onChangeText: inputChangedHandler.bind(this, "date"),
+            value: inputValues.date,
+          }}
+        />
       </View>
-    );
-
+      <Input
+        label="Description"
+        textInputConfig={{
+          multiline: true,
+          // autoCorrect: false,
+          // autoCapitalize: 'none',
+          onChangeText: inputChangedHandler.bind(this, "description"),
+          value: inputValues.description,
+        }}
+      />
+      <View style={styles.buttons}>
+        <Button style={styles.button} mode="flat" onPress={onCancel}>
+          Cancel
+        </Button>
+        <Button onPress={submitHandler}>{submitButtonLabel}</Button>
+      </View>
+    </View>
+  );
 }
 
 export default ExpenseForm;
