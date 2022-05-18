@@ -1,22 +1,28 @@
 import { useState } from 'react';
 import { View, StyleSheet, Text } from 'react-native';
+import Button from '../UI/Button';
 import Input from './Input';
 
-function ExpenseForm (){
+function ExpenseForm ({onCancel, onSubmit}){
     const [inputValues, setInputValues] = useState({
         amount: '',
         date: '',
         description: ''
     });
 
-    function inputChangedHandler(inputIdentifier, enteredValue) {
-        setInputValues((curInputValues) => {
-            return {
-                ...curInputValues,
-                [inputIdentifier]: enteredValue
-            };
-        });
+    function inputChangedHandler(
+      submitButtonLabel, inputIdentifier,
+      enteredValue
+    ) {
+      setInputValues((curInputValues) => {
+        return {
+          ...curInputValues,
+          [inputIdentifier]: enteredValue,
+        };
+      });
     }
+
+    function submitHandler(){}
 
     return (
       <View style={styles.form}>
@@ -52,6 +58,12 @@ function ExpenseForm (){
             value: inputValues.description,
           }}
         />
+        <View style={styles.buttons}>
+          <Button style={styles.button} mode="flat" onPress={onCancel}>
+            Cancel
+          </Button>
+          <Button onPress={submitHandler}>{submitButtonLabel}</Button>
+        </View>
       </View>
     );
 
@@ -60,22 +72,31 @@ function ExpenseForm (){
 export default ExpenseForm;
 
 const styles = StyleSheet.create({
-    form: {
-        marginTop: 40
-    },
-    title: {
-        fontSize: 24,
-        fontWeight: 'bold',
-        color: 'white',
-        marginVertical: 24,
-        textAlign: 'center'
-
-    },
-    inputRow: {
-        flexDirection: 'row',
-        justifyContent: 'space-between'
-    },
-    rowInput: {
-        flex: 1,
-    }
+  form: {
+    marginTop: 40,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: "bold",
+    color: "white",
+    marginVertical: 24,
+    textAlign: "center",
+  },
+  inputRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  rowInput: {
+    flex: 1,
+  },
+  buttons: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  button: {
+    minWidth: 120,
+    marginHorizontal: 8,
+  },
+  
 });
