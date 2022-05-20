@@ -1,12 +1,15 @@
-import { useLayoutEffect, useContext } from 'react';
+import { useLayoutEffect, useContext, useState } from 'react';
 import { View, StyleSheet } from "react-native";
 import ExpenseForm from '../components/ManageExpense/ExpenseForm';
+import LoadingOverlay from '../components/UI/LoadingOverlay';
+
 import IconButton from '../components/UI/IconButton';
 import { GlobalStyles } from '../constants/styles';
 import { ExpensesContext } from '../store/expenses-context';
-import { storeExpense, updateExpense } from '../util/http';
+import { storeExpense, updateExpense, deleteExpense } from '../util/http';
 
 function ManageExpense({route, navigation}) {
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const expensesCtx = useContext(ExpensesContext);
 
   const editedExpenseId = route.params?.expenseId;
@@ -21,8 +24,10 @@ function ManageExpense({route, navigation}) {
   }, [navigation, isEditing]);
 
 
-  async function deleteExpense(){
+  async function deleteExpenseHandler(){
+    setIsSubmitting(true);
     await deleteExpense(editedExpenseId);
+    setIsSubmitting(false);
     expensesCtx.deleteExpense(editedExpenseId);
     navigation.goBack();
   }
@@ -31,6 +36,7 @@ function ManageExpense({route, navigation}) {
     navigation.goBack();
   }
   async function confirmHandler(expenseData){
+    setIsSubmitting(true);
     if (isEditing){
       expensesCtx.updateExpense(editedExpenseId,expenseData);
       await updateExpense(editedExpenseId,expenseData);
@@ -38,7 +44,12 @@ function ManageExpense({route, navigation}) {
       const id = await storeExpense(expenseData);
       expensesCtx.addExpense({...expenseData, id: id});
     }
+    setIsSubmitting(false);
     navigation.goBack();
+  }
+
+  if (isSubmitting) {
+    return <LoadingOverlay />;
   }
 
   return (
@@ -56,7 +67,7 @@ function ManageExpense({route, navigation}) {
             icon="trash"
             color={GlobalStyles.colors.error500}
             size={36}
-            onPress={deleteExpense}
+            onPress={deleteExpenseHandler}
           />
         </View>
       )}
